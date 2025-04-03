@@ -25,7 +25,8 @@ namespace lpcv {
 		ERROR_NOT_PNG,
 		ERROR_PNG_READ_CREATION,
 		ERROR_PNG_INFO_CREATION,
-		ERROR_UNSUPPORTED_COLOUR_SPACE
+		ERROR_UNSUPPORTED_COLOUR_SPACE,
+		ERROR_SHOW_INVALID_FORMAT
 	};
 
 	class image {
@@ -46,6 +47,8 @@ namespace lpcv {
 			uint64_t getHeight();
 			uint8_t getColourSpace();
 			lpcv::byteArray getData();
+			unsigned char* getUChar();
+			
 
 
 	};

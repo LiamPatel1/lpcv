@@ -47,3 +47,7 @@ uint8_t lpcv::image::getColourSpace() {
 lpcv::byteArray lpcv::image::getData() {
 	return this->data;
 }
+
+unsigned char* lpcv::image::getUChar() {
+	return reinterpret_cast<unsigned char*>(this->data.data());
+}
