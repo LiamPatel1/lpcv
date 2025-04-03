@@ -41,6 +41,11 @@ namespace lpcv {
 			image();
 			void appendData(byteArray);
 			void appendData(char*, int size);
+			uint8_t getColourDepth();
+			uint64_t getWidth();
+			uint64_t getHeight();
+			uint8_t getColourSpace();
+			lpcv::byteArray getData();
 
 
 	};

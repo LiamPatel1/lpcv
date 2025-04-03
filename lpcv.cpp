@@ -31,3 +31,19 @@ void lpcv::image::appendData(char* appendedData, int size) {
 	}
 	lpcv::image::appendData(convertedData);
 }
+
+uint8_t lpcv::getColourDepth() {
+	return this->colourDepth;
+}
+uint64_t lpcv::getWidth() {
+	return this->width;
+}
+uint64_t lpcv::getHeight() {
+	return this->height;
+}
+uint8_t lpcv::getColourSpace() {
+	return this->colourSpace;
+}
+lpcv::byteArray lpcv::getData() {
+	return this->data;
+}

@@ -61,7 +61,7 @@ std::expected<lpcv::image, lpcv::Status> loadPNG(std::string fileName) {
         image.appendData((char*)row_pointers[y], width*lpcv::channelCount(colourSpace)*(colourDepth/8));
     }
 
-
+    
     fclose(fp);
 
     png_destroy_read_struct(&png, &info, NULL);
