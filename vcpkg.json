@@ -1,6 +1,6 @@
 {
   "dependencies": [
-    "graphicsmagick",
+    "libpng",
     {
       "name": "qtbase",
       "features": ["widgets"]
