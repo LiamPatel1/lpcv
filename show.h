@@ -7,7 +7,7 @@
 
 namespace lpcv {
 
-    std::expected<void, Status> show(lpcv::image image);
+    lpcv::Status show(lpcv::image image);
 
     class ImageViewer : public QMainWindow {
     public:

@@ -20,7 +20,18 @@ lpcv::ImageViewer::ImageViewer(lpcv::image image) {
 	if (image.getColourDepth() == 8 && image.getColourSpace() == lpcv::RGBA) format = QImage::Format_Grayscale16;
 	if (image.getColourDepth() == 16 && image.getColourSpace() == lpcv::RGBA) format = QImage::Format_RGBA64;
 	
-	QImage qimage(image.getUChar(), image.getWidth(), image.getHeight(), format);
+	QImage qimage(image.getWidth(), image.getHeight(), format);
+
+	//char data[] = {255,255,255 ,255,000,000,
+	//				 255,000,000, 255,255,255};
+
+	
+	//QImage qimage(2, 2, QImage::Format_RGB888);
+
+	for (int y = 0; y < qimage.height(); y++) {
+		memcpy(qimage.scanLine(y), &image.getUChar()[y * qimage.width() * (qimage.depth()/8)], qimage.width() *(qimage.depth())/8);
+	}
+
 
     m_originalPixmap = QPixmap::fromImage(qimage);
     m_label = new QLabel(this);
@@ -42,11 +53,11 @@ void lpcv::ImageViewer::resizeEvent(QResizeEvent* event) {
 void lpcv::ImageViewer::updatePixmap() {
     QSize newSize = m_label->size();
     QPixmap scaled = m_originalPixmap.scaled(newSize,
-        Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        Qt::KeepAspectRatio /*,Qt::SmoothTransformation*/);
     m_label->setPixmap(scaled);
 }
 
-std::expected<void, lpcv::Status> lpcv::show(lpcv::image image) {
+lpcv::Status lpcv::show(lpcv::image image) {
 
 
 	int argc = 0;
@@ -56,5 +67,5 @@ std::expected<void, lpcv::Status> lpcv::show(lpcv::image image) {
 	view.show();
 
 	a.exec();
-	return ;
+	return lpcv::Status::SUCCESS;
 }

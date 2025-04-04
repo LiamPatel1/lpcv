@@ -6,10 +6,11 @@
 #define CHECK(val) if (!val) return val.error()
 
 int main() {
-	auto image = loadPNG("C:\\Users\\liamp\\Desktop\\untitled.png");
+	auto image = loadPNG("C:\\Users\\liamp\\Desktop\\untitled2.png");
 	CHECK(image);
 	
 	auto ret = lpcv::show(image.value());
-	CHECK(ret);
+	
+	return 0;
 	
 }
