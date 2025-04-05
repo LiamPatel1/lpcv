@@ -1,8 +1,9 @@
-#include "lpcv.h"
-#include "imagereader.h"
-#include "show.h"
-#include<iostream>
 #include<QApplication>
+#include<expected>
+#include"lpcv.h"
+#include"lpcv/imagereader.h"
+#include"lpcv/image.h"
+#include"lpcv/viewer.h"
 
 #define CHECK(val) if (!val) return val.error()
 

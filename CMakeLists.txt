@@ -10,7 +10,7 @@ find_package(PNG REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS WIDGETS)
 
 
-add_executable (lpcv "lpcv.cpp" "lpcv.h" "imagereader.cpp" "main.cpp" "imagereader.h" "show.cpp" "show.h")
+add_executable (lpcv "main.cpp" "lpcv.cpp" "lpcv.h" "imagereader.cpp" "lpcv/imagereader.h" "viewer.cpp" "lpcv/viewer.h" "image.cpp" "lpcv/image.h" "lpcv/gaussian.h")
 set_property(TARGET lpcv PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 target_link_libraries(lpcv PNG::PNG Qt6::Widgets)

@@ -1,11 +1,13 @@
 #include"lpcv.h"
 #include<string>
 #include<expected>
+#include"lpcv/imagereader.h"
+#include"lpcv/image.h"
 #include<png.h>
 
 
 
-std::expected<lpcv::image, lpcv::Status> loadPNG(std::string fileName) {
+std::expected<lpcv::Image, lpcv::Status> loadPNG(std::string fileName) {
     
     FILE* fp = fopen(fileName.c_str(), "rb");
     if (!fp) return std::unexpected(lpcv::ERROR_OPEN_FILE);
@@ -53,12 +55,12 @@ std::expected<lpcv::image, lpcv::Status> loadPNG(std::string fileName) {
 
     png_bytep* row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
 
-    lpcv::image image({},colourSpace,colourDepth,width,height);
+    lpcv::Image image(colourSpace,colourDepth,width,height);
 
     for (uint32_t y = 0; y < height; y++) {
         row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(png, info));  
         png_read_row(png, row_pointers[y], NULL);
-        image.appendData((char*)row_pointers[y], width*lpcv::channelCount(colourSpace)*(colourDepth/8));
+        image.appendData((char*)row_pointers[y], width*lpcv::getChannelCount(colourSpace)*(colourDepth/8));
     }
 
     

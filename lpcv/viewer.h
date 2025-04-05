@@ -1,4 +1,7 @@
+#pragma once
+
 #include"lpcv.h"
+#include"lpcv/image.h"
 #include<QString>
 #include<QImage>
 #include<QMainWindow>
@@ -9,7 +12,7 @@ namespace lpcv {
 
     class Viewer : public QMainWindow {
     public:
-        Viewer(lpcv::image image);
+        Viewer(lpcv::Image image);
 
     protected:
         void resizeEvent(QResizeEvent* event) override;
