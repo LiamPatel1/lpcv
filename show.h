@@ -7,20 +7,16 @@
 
 namespace lpcv {
 
-    lpcv::Status show(lpcv::image image);
-
-    class ImageViewer : public QMainWindow {
+    class Viewer : public QMainWindow {
     public:
-        ImageViewer(lpcv::image image);
+        Viewer(lpcv::image image);
 
     protected:
         void resizeEvent(QResizeEvent* event) override;
 
     private:
-        void updatePixmap();
-
-        QPixmap m_originalPixmap;
-        QLabel* m_label;
+        QPixmap originalPixmap;
+        QLabel* label;
     };
 
 }
