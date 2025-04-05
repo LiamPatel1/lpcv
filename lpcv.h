@@ -2,11 +2,10 @@
 
 #include<vector>
 #include<cstddef>
-#include<string>
 
 namespace lpcv {
-
-	typedef std::vector<std::byte> byteArray;
+	typedef unsigned char uchar;
+	typedef std::vector<uchar> byteArray;
 
 	enum ColourSpace {
 		NONE,
@@ -16,34 +15,20 @@ namespace lpcv {
 		GA
 	};
 
-	int channelCount(int space);
-	
-
 	enum Status {
 		SUCCESS,
 		ERROR_OPEN_FILE,
 		ERROR_NOT_PNG,
 		ERROR_PNG_READ_CREATION,
 		ERROR_PNG_INFO_CREATION,
-		ERROR_UNSUPPORTED_COLOUR_SPACE
+		ERROR_UNSUPPORTED_COLOUR_SPACE,
+		ERROR_SHOW_INVALID_FORMAT
 	};
 
-	class image {
-
-		int8_t colourSpace;
-		uint32_t width;
-		uint32_t height;
-		uint8_t colourDepth;
-		lpcv::byteArray data;
-
+	class Size {
 		public:
-			image(byteArray data, uint8_t colourSpace, uint8_t colourDepth, uint64_t width, uint64_t height);
-			image();
-			void appendData(byteArray);
-			void appendData(char*, int size);
-
-
+			uint32_t x;
+			uint32_t y;
+			Size(uint32_t x, uint32_t y);
 	};
-
-
 }
