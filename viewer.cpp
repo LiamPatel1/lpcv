@@ -36,6 +36,7 @@ lpcv::Viewer::Viewer(lpcv::Image image) {
     label->setAlignment(Qt::AlignCenter);
     label->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     this->setCentralWidget(label);
+	this->resize(500, 500);
 	this->show();
 }
 

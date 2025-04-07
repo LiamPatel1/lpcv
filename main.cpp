@@ -3,6 +3,7 @@
 #include"lpcv.h"
 #include"lpcv/imagereader.h"
 #include"lpcv/image.h"
+#include"lpcv/gaussian.h"
 #include"lpcv/viewer.h"
 
 #define CHECK(val) if (!val) return val.error()
@@ -12,17 +13,14 @@ int main() {
 	QApplication a(argc, {});
 
 
-	auto image1 = loadPNG("C:\\Users\\liamp\\Desktop\\untitled.png");
-	auto image2 = loadPNG("C:\\Users\\liamp\\Desktop\\untitled2.png");
-	auto image3 = loadPNG("C:\\Users\\liamp\\Desktop\\untitled3.png");
+	auto image = loadPNG("C:\\Users\\liamp\\Desktop\\untitled3.png");
+	CHECK(image);
 
-	CHECK(image1);
-	CHECK(image2);
-	CHECK(image3);
+	new lpcv::Viewer(*image);
+	auto ret = lpcv::gaussian(*image, { 3, 3 });
+	CHECK(ret);
+	new lpcv::Viewer(*image);
 
-	new lpcv::Viewer(image1.value());
-	new lpcv::Viewer(image2.value());
-	new lpcv::Viewer(image3.value());
 
 	a.exec();
 	return 0;

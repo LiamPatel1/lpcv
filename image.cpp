@@ -33,18 +33,32 @@ void lpcv::Image::appendData(char* appendedData, int size) {
 	lpcv::Image::appendData(convertedData);
 }
 
-uint8_t lpcv::Image::getColourDepth() {
+unsigned char* lpcv::Image::operator[](std::size_t i) {
+	return &(*data)[i*getHeight()];
+}
+
+uint8_t lpcv::Image::getColourDepth() const {
 	return this->colourDepth;
 }
-uint64_t lpcv::Image::getWidth() {
+uint64_t lpcv::Image::getWidth() const {
 	return this->width;
 }
-uint64_t lpcv::Image::getHeight() {
+uint64_t lpcv::Image::getHeight() const {
 	return this->height;
 }
-uint8_t lpcv::Image::getColourSpace() {
+uint8_t lpcv::Image::getColourSpace() const {
 	return this->colourSpace;
 }
+uint8_t lpcv::Image::getChannelCount() const {
+	return lpcv::getChannelCount(this->getColourSpace());
+}
+uint64_t lpcv::Image::getBytesPerLine() const {
+	return this->getWidth() * this->getChannelCount() * std::ceil(this->getColourDepth()/8);
+}
+uint64_t lpcv::Image::getValue(int y, int x, int channel) const {
+	return (*data)[y * getBytesPerLine() + x*getChannelCount()* channel];
+}
+
 
 int lpcv::getChannelCount(uint8_t type) {
 	switch (type) {
