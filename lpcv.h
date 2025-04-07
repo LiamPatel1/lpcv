@@ -15,6 +15,11 @@ namespace lpcv {
 		GA
 	};
 
+	enum Dimension {
+		DIMENSION_X,
+		DIMENSION_Y
+	};
+
 	enum Status {
 		SUCCESS,
 		ERROR_OPEN_FILE,

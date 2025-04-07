@@ -18,7 +18,9 @@ namespace lpcv {
 
 		byteArray* data;
 
-		uchar* operator[](std::size_t i);
+		unsigned char* operator()(int y, int x, int channel);
+
+
 		void appendData(byteArray);
 		void appendData(char*, int size);
 		uint8_t getColourDepth() const;

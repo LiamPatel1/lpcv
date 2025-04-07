@@ -1,6 +1,23 @@
 #include"lpcv/image.h"
 #include<cmath>
 
+
+//class Rows {
+//	Rows(lpcv::Image& image, unsigned char* data) : image(image), data(data) {}
+//	lpcv::Image& image;
+//	unsigned char* data;
+//	unsigned char* operator[](size_t i){
+//		return 
+//	}
+//};
+//
+//
+
+
+
+
+
+
 lpcv::Image::Image(byteArray* data, uint8_t colourSpace, uint8_t colourDepth, uint64_t width, uint64_t height, bool copyData)
 	: colourSpace(colourSpace), colourDepth(colourDepth), width(width), height(height) {
 
@@ -33,9 +50,14 @@ void lpcv::Image::appendData(char* appendedData, int size) {
 	lpcv::Image::appendData(convertedData);
 }
 
-unsigned char* lpcv::Image::operator[](std::size_t i) {
-	return &(*data)[i*getHeight()];
+unsigned char* lpcv::Image::operator()(int y, int x, int channel) {
+	return &(*data)[
+		y * getWidth() 
+		+ x * getChannelCount() * (colourDepth/8)
+		+ channel
+	];
 }
+
 
 uint8_t lpcv::Image::getColourDepth() const {
 	return this->colourDepth;

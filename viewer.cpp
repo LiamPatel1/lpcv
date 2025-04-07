@@ -42,6 +42,6 @@ lpcv::Viewer::Viewer(lpcv::Image image) {
 
 void lpcv::Viewer::resizeEvent(QResizeEvent* event) {
     QMainWindow::resizeEvent(event);
-	label->setPixmap(originalPixmap.scaled(label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	label->setPixmap(originalPixmap.scaled(label->size(), Qt::KeepAspectRatio /*,Qt::SmoothTransformation*/));
 
 }
