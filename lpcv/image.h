@@ -18,8 +18,7 @@ namespace lpcv {
 
 		byteArray* data;
 
-		unsigned char* operator()(int y, int x, int channel);
-
+		unsigned char& operator()(uint32_t y, uint32_t x, uint8_t channel) const;
 
 		void appendData(byteArray);
 		void appendData(char*, int size);

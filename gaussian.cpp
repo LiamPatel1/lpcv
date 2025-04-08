@@ -2,6 +2,7 @@
 #include"lpcv.h"
 #include"lpcv/viewer.h"
 #include<expected>
+#include<iostream>
 #include<cmath>
 
 int absIndex(int i, int bound) {
@@ -23,10 +24,8 @@ std::expected<int, lpcv::Status> applyKernal(const lpcv::Image& image, const std
 
 	for (int kernaly = 0; kernaly < kernal_height; kernaly++) {
 		for (int kernalx = 0; kernalx < kernal_width; kernalx++) {
-			total += 
-				kernal[kernaly][kernalx] * (*image.data)[(y + absIndex(kernal_height - kernaly, image.getHeight())) * image.getWidth() 
-				+ (x + absIndex(kernal_width - kernalx, image.getWidth())) * image.getChannelCount() 
-				+ channel];
+			total +=
+				kernal[kernaly][kernalx] * (image(y, x, channel));
 		}
 	}
 	return total;
@@ -34,14 +33,23 @@ std::expected<int, lpcv::Status> applyKernal(const lpcv::Image& image, const std
 }
 
 std::expected<void, lpcv::Status> lpcv::gaussian(Image& image, Size size) {
+	std::ios::sync_with_stdio(false);
 	std::vector<byteArray> const kernal = { {0,1,0},{0,2,0},{0,3,0} };
 	for (int y = 0; y < image.getHeight(); y++) {
 		for (int x = 0; x < image.getWidth(); x++) {
 			for (int channel = 0; channel < image.getChannelCount(); channel++) {
 				auto newvalue = applyKernal(image, kernal, x, y, channel);
 				if (!newvalue) return std::unexpected(newvalue.error());
-				image(y, x, channel) = *newvalue;
+				image(y, x, channel) = 111;
 			}
+
 		}
 	}
+	// test image pixel algor
+	for (int y = 1600; y < 2000; y++) {
+		for (int x = 0; x < 200; x++) {
+			image(y, x, 0) = 222;
+		}
+	}
+	
 }
