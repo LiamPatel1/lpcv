@@ -13,7 +13,7 @@ int main() {
 	QApplication a(argc, {});
 
 
-	auto image = loadPNG("C:\\Users\\liamp\\Desktop\\untitled3.png");
+	auto image = loadPNG("C:\\Users\\liamp\\Desktop\\untitled2.png");
 	CHECK(image);
 
 	new lpcv::Viewer(*image);

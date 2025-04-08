@@ -51,11 +51,7 @@ void lpcv::Image::appendData(char* appendedData, int size) {
 }
 
 unsigned char& lpcv::Image::operator()(uint32_t y, uint32_t x, uint8_t channel) const {
-	return (*data)[std::ceil(
-		y * getWidth() 
-		+ x * getChannelCount() * (colourDepth/(float)8)
-		+ channel
-	)];
+	return (*data)[(y * getWidth() + x) * getChannelCount() + channel];
 }
 
 

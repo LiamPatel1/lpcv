@@ -25,7 +25,7 @@ lpcv::Viewer::Viewer(lpcv::Image image) {
 	QImage qimage(image.getWidth(), image.getHeight(), format);
 
 
-	int bytesPerLine = qimage.width() * (qimage.depth()) / 8;
+	int bytesPerLine = qimage.width() * (qimage.depth()/8);
 
 
 	for (int y = 0; y < qimage.height(); y++) {
@@ -42,6 +42,6 @@ lpcv::Viewer::Viewer(lpcv::Image image) {
 
 void lpcv::Viewer::resizeEvent(QResizeEvent* event) {
     QMainWindow::resizeEvent(event);
-	label->setPixmap(originalPixmap.scaled(label->size(), Qt::KeepAspectRatio /*,Qt::SmoothTransformation*/));
+	label->setPixmap(originalPixmap.scaled(label->size(), Qt::KeepAspectRatio ,Qt::SmoothTransformation));
 
 }

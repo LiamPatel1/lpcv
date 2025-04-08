@@ -7,6 +7,33 @@ namespace lpcv {
 	typedef unsigned char uchar;
 	typedef std::vector<uchar> byteArray;
 
+
+	template<typename T>
+	class Vec2 {
+	private:
+		size_t rows_;
+		size_t cols_;
+		T* data;
+	public:
+		Vec2(size_t rows, size_t cols)
+			: rows_(rows), cols_(cols), data(new T[rows_ * cols_]) {
+		}
+
+		T& operator()(size_t row, size_t col) {
+			return data[row * cols_ + col];
+		}
+		const T& operator()(size_t row, size_t col) const {
+			return data[row * cols_ + col];
+		}
+
+		size_t getHeight() const noexcept { return rows_; }
+		size_t getWidth() const noexcept { return cols_; }
+	};
+
+
+
+
+
 	enum ColourSpace {
 		NONE,
 		RGB,
