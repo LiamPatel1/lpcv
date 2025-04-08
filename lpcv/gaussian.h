@@ -5,5 +5,5 @@
 #include<expected>
 
 namespace lpcv {
-	std::expected<void, lpcv::Status> gaussian(Image &image, Size size);
+	std::expected<lpcv::Image, lpcv::Status> gaussian(const Image& image);
 }
