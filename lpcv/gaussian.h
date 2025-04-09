@@ -2,5 +2,8 @@
 
 #include"lpcv.h"
 #include"lpcv/image.h"
+#include<expected>
 
-void guassian(&lpcv::Image image, lpcv::Size size);
+namespace lpcv {
+	std::expected<lpcv::Image, lpcv::Status> gaussian(const Image& image);
+}
