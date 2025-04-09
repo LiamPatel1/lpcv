@@ -11,10 +11,11 @@
 int main() {
 	int argc = 0;
 	QApplication a(argc, {});
-	auto image = loadPNG("C:\\Users\\liamp\\Desktop\\untitled2.png");
+	auto image = loadPNG("C:\\Users\\liamp\\Desktop\\example.png");
 	CHECK(image);
 	auto image2 = lpcv::gaussian(*image);
 	CHECK(image2);
+	
 
 	new lpcv::Viewer(*image);
 	new lpcv::Viewer(*image2);
