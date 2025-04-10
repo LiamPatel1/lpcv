@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include<expected>
-#include"lpcv.h"
+#include"../lpcv.h"
 #include"lpcv/image.h"
 
 

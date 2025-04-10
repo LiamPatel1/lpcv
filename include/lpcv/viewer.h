@@ -12,7 +12,7 @@ namespace lpcv {
 
     class Viewer : public QMainWindow {
     public:
-        Viewer(lpcv::Image image);
+        Viewer(Image image);
 
     protected:
         void resizeEvent(QResizeEvent* event) override;

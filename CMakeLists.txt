@@ -8,9 +8,38 @@ project ("lpcv")
 
 find_package(PNG REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS WIDGETS)
+find_package(Catch2 3 REQUIRED)
 
 
-add_executable (lpcv "main.cpp" "lpcv.cpp" "lpcv.h" "imagereader.cpp" "lpcv/imagereader.h" "viewer.cpp" "lpcv/viewer.h" "image.cpp" "lpcv/image.h" "gaussian.cpp" "lpcv/gaussian.h" "lpcv/vec.h" "lpcv/kernel.h")
-set_property(TARGET lpcv PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+add_executable (lpcv
+				"src/main.cpp"
+				"src/lpcv.cpp"
+				"src/imagereader.cpp"
+				"src/viewer.cpp"
+				"src/gaussian.cpp"
+				"include/lpcv.h"
+				"include/lpcv/viewer.h"
+				"include/lpcv/imagereader.h"
+				"include/lpcv/gaussian.h"
+				"include/lpcv/vec.h"
+				"include/lpcv/kernel.h"
+				"include/lpcv/image.h"
+)
+
+target_include_directories(lpcv PRIVATE "include")
+
 
 target_link_libraries(lpcv PNG::PNG Qt6::Widgets)
+set_property(TARGET lpcv PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
+
+add_executable (tests "test.cpp")
+target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
+
+
+
+include(CTest)
+include(Catch)
+catch_discover_tests(tests)
+
+

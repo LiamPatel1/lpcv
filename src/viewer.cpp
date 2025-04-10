@@ -1,5 +1,4 @@
 #include"lpcv.h"
-#include"lpcv/viewer.h"
 #include<QImage>
 #include<QApplication>
 #include<iostream>
@@ -7,6 +6,8 @@
 #include<QWindow>
 #include<QLabel>
 #include<QDebug>
+#include <iterator>
+#include <cstring>
 #include<cstddef>
 #include<QMainWindow>
 #include <QPixmap>
@@ -16,20 +17,19 @@
 
 lpcv::Viewer::Viewer(lpcv::Image image) {
 	QImage::Format format = QImage::Format_Invalid;
-	if (image.getColourDepth() == 8 && image.getColourSpace() == lpcv::RGBA) format = QImage::Format_RGBA8888;
-	if (image.getColourDepth() == 8 && image.getColourSpace() == lpcv::RGB) format = QImage::Format_RGB888;
-	if (image.getColourDepth() == 8 && image.getColourSpace() == lpcv::G) format = QImage::Format_Grayscale8;
-	if (image.getColourDepth() == 16 && image.getColourSpace() == lpcv::G) format = QImage::Format_Grayscale16;
-	if (image.getColourDepth() == 16 && image.getColourSpace() == lpcv::RGBA) format = QImage::Format_RGBA64;
+	if (image.getBitDepth() == 8 && image.getColourSpace() == lpcv::RGBA) format = QImage::Format_RGBA8888;
+	if (image.getBitDepth() == 8 && image.getColourSpace() == lpcv::RGB) format = QImage::Format_RGB888;
+	if (image.getBitDepth() == 8 && image.getColourSpace() == lpcv::G) format = QImage::Format_Grayscale8;
+	if (image.getBitDepth() == 16 && image.getColourSpace() == lpcv::G) format = QImage::Format_Grayscale16;
+	if (image.getBitDepth() == 16 && image.getColourSpace() == lpcv::RGBA) format = QImage::Format_RGBA64;
 
 	QImage qimage(image.getWidth(), image.getHeight(), format);
 
 
-	int bytesPerLine = qimage.width() * (qimage.depth()/8);
 
 
-	for (int y = 0; y < qimage.height(); y++) {
-		std::copy(image.data->begin()+ y * bytesPerLine, image.data->begin() + (y+1) * bytesPerLine, qimage.scanLine(y));
+	for (int y = 0; y < image.getHeight(); y++) {
+		std::copy(image.at(y), image.at(y)+image.getBytesPerRow(), qimage.scanLine(y));
 	}
     originalPixmap = QPixmap::fromImage(qimage);
     label = new QLabel(this); 
