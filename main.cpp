@@ -1,5 +1,6 @@
 #include<QApplication>
 #include<expected>
+#include"lpcv/vec.h"
 #include"lpcv.h"
 #include"lpcv/imagereader.h"
 #include"lpcv/image.h"
@@ -19,6 +20,14 @@ int main() {
 
 	new lpcv::Viewer(*image);
 	new lpcv::Viewer(*image2);
+
+
+	
+	const unsigned char* data = (unsigned char*)("dxkej687bjnd");
+
+
+
+
 
 
 	a.exec();

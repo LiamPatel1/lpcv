@@ -3,6 +3,7 @@
 #include"lpcv/viewer.h"
 #include<expected>
 #include<iostream>
+#include"lpcv/kernel.h"
 #include <random>
 #include<cmath>
 
@@ -62,13 +63,12 @@ std::vector<std::vector<float>> standardisationNormalise(const std::vector<std::
 
 
 
-
-std::expected<lpcv::Image, lpcv::Status> convoluteKernal(const lpcv::Image& image, const std::vector<std::vector<float>>& kernel) {
+std::expected<lpcv::Image, lpcv::Status> convoluteKernal(const lpcv::Image& image, const lpcv::Kernel kernel) {
 	
 	lpcv::Image newImage = image;
 
-	int widthFromCentre = (kernel[0].size() - 1) / 2;
-	int heightFromCentre = (kernel.size() - 1) / 2;
+	int widthFromCentre = (kernel.getWidth() - 1) / 2;
+	int heightFromCentre = (kernel.getHeight() - 1) / 2;
 	for (int y = 0; y < image.getHeight(); y++) {
 		for (int x = 0; x < image.getWidth(); x++) {
 			for (int channel = 0; channel < image.getChannelCount(); channel++) {
@@ -76,7 +76,7 @@ std::expected<lpcv::Image, lpcv::Status> convoluteKernal(const lpcv::Image& imag
 				float total = 0;
 				for (int kernely = -heightFromCentre; kernely < heightFromCentre; kernely++) {
 					for (int kernelx = -widthFromCentre; kernelx < widthFromCentre; kernelx++) {
-						total += (kernel[kernely + heightFromCentre][kernelx + widthFromCentre]) * image(mirrorIndex(y + kernely, image.getHeight() - 1), mirrorIndex(x + kernelx, image.getWidth() - 1), channel);
+						total += kernel.at<float>(kernely + heightFromCentre, kernelx + widthFromCentre) * image(mirrorIndex(y + kernely, image.getHeight() - 1), mirrorIndex(x + kernelx, image.getWidth() - 1), channel);
 					}
 				}
 				newImage(y, x, channel) = (uint8_t)std::round(total);
@@ -105,14 +105,25 @@ std::expected<lpcv::Image, lpcv::Status> lpcv::gaussian(const Image& image) {
 	//	{-1,-1,-1}
 
 	//};
-	std::vector<std::vector<float>> kernel = {
+	/*std::vector<std::vector<float>> kernel = {
 	{-1,0,1},
 	{-2,0,2},
 	{-1,0,1}
 
-	};
+	};*/
+	lpcv::Kernel kernel({
+		{-1,0,1},
+		{-2,0,2},
+		{-1,0,1}
+	});
+	/*std::vector<std::vector<float>> kernel({
+		{-1,0,1},
+		{-2,0,2},
+		{-1,0,1}
+		});*/
+	
 
-	return convoluteKernal(image, (kernel));
+	return convoluteKernal(image, kernel);
 	
 }
 

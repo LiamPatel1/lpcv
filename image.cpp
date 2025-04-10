@@ -83,9 +83,7 @@ uint8_t lpcv::Image::getChannelCount() const {
 uint64_t lpcv::Image::getBytesPerLine() const {
 	return this->getWidth() * this->getChannelCount() * std::ceil(this->getColourDepth()/8);
 }
-uint64_t lpcv::Image::getValue(int y, int x, int channel) const {
-	return (*data)[y * getBytesPerLine() + x*getChannelCount()* channel];
-}
+
 
 
 int lpcv::getChannelCount(uint8_t type) {

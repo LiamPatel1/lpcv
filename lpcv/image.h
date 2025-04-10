@@ -31,7 +31,6 @@ namespace lpcv {
 		uint64_t getHeight() const;
 		uint8_t getColourSpace() const;
 		uint8_t getChannelCount() const;
-		uint64_t getValue(int y, int x, int channel) const;
 		uint64_t getBytesPerLine() const;
 
 
