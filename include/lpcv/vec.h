@@ -5,9 +5,10 @@
 #include<variant>
 #include<cmath>
 #include<array>
-#include <cstdarg>
+#include<cstdarg>
 #include<algorithm>
-#include"lpcv.h"
+
+#include"lpcv/enum.h"
 
 namespace lpcv {
 

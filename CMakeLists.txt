@@ -30,10 +30,11 @@ target_include_directories(lpcv PRIVATE include)
 
 
 target_link_libraries(lpcv PNG::PNG Qt6::Widgets)
-set_property(TARGET lpcv PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 
-add_executable (tests "test.cpp")
+add_executable (tests "tests/test.cpp")
+target_include_directories(tests PRIVATE include)
+
 target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
 
 
@@ -41,5 +42,10 @@ target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
 include(CTest)
 include(Catch)
 catch_discover_tests(tests)
+
+
+set_property(TARGET lpcv PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+set_property(TARGET tests PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 
 

@@ -1,4 +1,5 @@
 #pragma once
+#include<vector>
 
 namespace lpcv {
 	typedef unsigned char uchar;
