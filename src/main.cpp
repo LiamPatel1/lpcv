@@ -7,7 +7,7 @@
 #define CHECK(val) if (!val) return val.error()
 
 int main() {
-	int argc = 0;
+	/*int argc = 0;
 	QApplication a(argc, {});
 	auto image = loadPNG("C:\\Users\\liamp\\Desktop\\example.png");
 	CHECK(image);
@@ -15,7 +15,7 @@ int main() {
 	CHECK(image2);
 
 	new lpcv::Viewer(*image);
-	new lpcv::Viewer(*image2);
+	new lpcv::Viewer(*image2);*/
 
 
 	//lpcv::Image image({ 
@@ -29,7 +29,16 @@ int main() {
 
 	
 
-	a.exec();
+	//a.exec();
+
+
+	/*char[] a = { 1,2,3,4,5,6,7 };
+	(void f())a;
+	a();*/
+
+
+
+
 	return 0;
 	
 }

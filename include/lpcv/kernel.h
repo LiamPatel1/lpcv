@@ -1,7 +1,6 @@
 #pragma once
 
-#include"../lpcv.h"
-#include"../lpcv/vec.h"
+#include"lpcv.h"
 
 namespace lpcv {
 	class Kernel : public Vec {

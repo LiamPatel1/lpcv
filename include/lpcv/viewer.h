@@ -1,7 +1,6 @@
 #pragma once
 
-#include"lpcv.h"
-#include"lpcv/image.h"
+#include"../include/lpcv.h"
 #include<QString>
 #include<QImage>
 #include<QMainWindow>

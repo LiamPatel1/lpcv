@@ -1,7 +1,6 @@
 #pragma once
 
-#include"../lpcv.h"
-#include"vec.h"
+#include"lpcv.h"
 #include<cmath>
 
 namespace lpcv {

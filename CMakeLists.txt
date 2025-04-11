@@ -13,7 +13,6 @@ find_package(Catch2 3 REQUIRED)
 
 add_executable (lpcv
 				"src/main.cpp"
-				"src/lpcv.cpp"
 				"src/imagereader.cpp"
 				"src/viewer.cpp"
 				"src/gaussian.cpp"
@@ -24,9 +23,10 @@ add_executable (lpcv
 				"include/lpcv/vec.h"
 				"include/lpcv/kernel.h"
 				"include/lpcv/image.h"
-)
+				"include/lpcv/enum.h"
+ "include/lpcv/enum.h")
 
-target_include_directories(lpcv PRIVATE "include")
+target_include_directories(lpcv PRIVATE include)
 
 
 target_link_libraries(lpcv PNG::PNG Qt6::Widgets)

@@ -1,7 +1,6 @@
 #pragma once
 
-#include"../lpcv.h"
-#include"lpcv/image.h"
+#include"lpcv.h"
 #include<expected>
 
 namespace lpcv {
