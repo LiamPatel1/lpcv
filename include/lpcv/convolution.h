@@ -6,5 +6,6 @@
 
 namespace lpcv {
 	std::expected<Image, Status> gaussian(const Image& image);
-	int mirrorIndex(int i, int bound);
-}
+	std::expected<lpcv::Image, lpcv::Status> convoluteKernal(const lpcv::Image& image, const lpcv::Kernel kernel);
+
+	}

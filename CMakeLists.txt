@@ -1,8 +1,9 @@
 ﻿cmake_minimum_required (VERSION 3.15)
 set(CMAKE_CXX_STANDARD 23)
 
-set(VCPKG_TARGET_TRIPLET "x64-windows-static")
 set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE FILEPATH "Path to toolchain")
+set(VCPKG_OVERLAY_TRIPLETS "./triplets")
+set(VCPKG_TARGET_TRIPLET "x64-windows-custom")
 
 project ("lpcv")
 
@@ -11,40 +12,60 @@ find_package(Qt6 REQUIRED COMPONENTS WIDGETS)
 find_package(Catch2 3 REQUIRED)
 
 
-add_executable (lpcv
-				"src/main.cpp"
-				"src/imagereader.cpp"
-				"src/viewer.cpp"
-				"src/gaussian.cpp"
-				"include/lpcv.h"
-				"include/lpcv/viewer.h"
-				"include/lpcv/imagereader.h"
-				"include/lpcv/gaussian.h"
-				"include/lpcv/vec.h"
-				"include/lpcv/kernel.h"
-				"include/lpcv/image.h"
-				"include/lpcv/enum.h"
- "include/lpcv/enum.h")
 
+set(source_files
+	"src/main.cpp"
+	"src/imagereader.cpp"
+	"src/viewer.cpp"
+	"src/convolution.cpp"
+)
+set(header_files
+	"include/lpcv.h"
+	"include/lpcv/viewer.h"
+	"include/lpcv/imagereader.h"
+	"include/lpcv/convolution.h"
+	"include/lpcv/vec.h"
+	"include/lpcv/kernel.h"
+	"include/lpcv/image.h"
+	"include/lpcv/enum.h"
+)
+
+set(tests_header_files
+	"include/tests/convolution_t.h"
+)
+
+set(tests_source_files
+	"tests/convolution_t.cpp"
+)
+
+
+add_library (lpcv STATIC
+				${source_files}
+				${header_files}
+)
 target_include_directories(lpcv PRIVATE include)
-
-
 target_link_libraries(lpcv PNG::PNG Qt6::Widgets)
+set_property(TARGET lpcv PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
+add_executable (main
+				"src/main.cpp"
+)
+target_include_directories(main PRIVATE include)
+target_link_libraries(main lpcv)
+set_property(TARGET main PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 
-add_executable (tests "tests/test.cpp")
+
+add_executable (tests
+				${tests_source_files}
+				${tests_header_files}
+				${header_files}
+)	
+
 target_include_directories(tests PRIVATE include)
 
-target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
+target_link_libraries(tests PRIVATE Catch2::Catch2WithMain lpcv)
 
-
-
-include(CTest)
-include(Catch)
-catch_discover_tests(tests)
-
-
-set_property(TARGET lpcv PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 set_property(TARGET tests PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 

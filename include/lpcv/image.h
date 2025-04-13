@@ -8,10 +8,12 @@ namespace lpcv {
 	class Image : public Vec {
 
 		ColourSpace colourSpace;
+		std::string name;
 
 	public:
 
-		Image(std::vector<unsigned char> data, uint8_t bitDepth, uint32_t height, uint32_t width, ColourSpace colourSpace) {
+		Image(std::vector<unsigned char> data, uint8_t bitDepth, uint32_t height, uint32_t width, ColourSpace colourSpace, std::string name="image") {
+			this->name = name;
 
 			this->colourSpace = colourSpace;
 
@@ -102,14 +104,26 @@ namespace lpcv {
 			}
 
 		}
-			
-		const std::vector<unsigned char> getSubPixel(const int i1, const int i2, const int i3) const {
-			const unsigned char* addr = &this->data[getByteDepth() * (measurements[2] * (i1 * measurements[1] + i2) + i3)];
-			std::vector<unsigned char> data;
+		
+
+		const std::vector<unsigned char> getSubPixel_ByteArray(const int i) const {
+			const unsigned char* addr = &data[i*getByteDepth()];
+			std::vector<unsigned char> subPixelData;
 			for (int i = 0; i < getByteDepth();i++) {
-				data.push_back(addr[i]);
+				subPixelData.push_back(addr[i]);
 			}
+			return subPixelData;
 		}
+
+		const std::vector<unsigned char> getSubPixel_ByteArray(const int i1, const int i2, const int i3) const {
+			const unsigned char* addr = at(i1,i2,i3);
+			std::vector<unsigned char> subPixelData;
+			for (int i = 0; i < getByteDepth();i++) {
+				subPixelData.push_back(addr[i]);
+			}
+			return subPixelData;
+		}
+
 		uint64_t getBytesPerRow() const {
 			return getWidth()* getChannelCount()* getByteDepth();
 		}
@@ -117,6 +131,58 @@ namespace lpcv {
 		ColourSpace getColourSpace() const {
 			return this->colourSpace;
 		}
+
+		const std::string getName() const {
+			return this->name;
+		}
+
+		uint64_t getPixelCount() {
+			return getHeight() * getWidth();
+		}
+		uint64_t getSubPixelCount() {
+			return getHeight() * getWidth() * getChannelCount();
+		}
+
+
+		Image expand_bitDepth(uint8_t newBitDepth) {
+			if (newBitDepth <= getBitDepth()) return Image(*this);
+			if (newBitDepth % 8 != 0 || newBitDepth > 64) throw std::invalid_argument("invalid bitDepth to be expanded to");
+
+			std::vector<unsigned char> newData;
+			for (int i = 0; i < getDataSize(); i++) {
+				for (int x = 0; x < (newBitDepth / getBitDepth()); x++) {
+					newData.push_back(data[i]);
+				}
+			}
+			
+			return Image(newData, newBitDepth, getHeight(), getWidth(), getColourSpace());
+		}
+
+		Image expand_RGB_RGBA() {
+			if (getColourSpace() != RGB) throw std::invalid_argument("Non-RGB image passed into expand_RGB_RGBA");
+			std::vector<unsigned char> newData;
+			for (int i = 0; i < getSubPixelCount(); i+=3) {
+				std::vector<unsigned char> subPixelData;
+				subPixelData = getSubPixel_ByteArray(i);
+				newData.insert(newData.end(), subPixelData.begin(), subPixelData.end());
+				subPixelData = getSubPixel_ByteArray(i+1);
+				newData.insert(newData.end(), subPixelData.begin(), subPixelData.end());
+				subPixelData = getSubPixel_ByteArray(i+2);
+				newData.insert(newData.end(), subPixelData.begin(), subPixelData.end());
+
+				std::vector<unsigned char> alphaChannel(getByteDepth(), 255);
+				newData.insert(newData.end(), alphaChannel.begin(), alphaChannel.end());
+			}
+
+			return Image(newData, getBitDepth(), getHeight(), getWidth(), RGBA);
+
+		}
+
+
+
+
+
+
 
 
 	};

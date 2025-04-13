@@ -5,15 +5,16 @@
 #include<cmath>
 
 int mirrorIndex(int i, int bound) {
+	if (bound < 0) throw std::invalid_argument("Negative bound");
 	if (i < 0) return ~i;
-	if (i > bound) return bound - std::abs(bound - i) + 1;
+	if (i > bound) return bound - std::abs(bound - i) ;
 	
 	return i;
 
 }
 
 
-std::expected<lpcv::Image, lpcv::Status> convoluteKernal(const lpcv::Image& image, const lpcv::Kernel kernel) {
+std::expected<lpcv::Image, lpcv::Status> lpcv::convoluteKernal(const lpcv::Image& image, const lpcv::Kernel kernel) {
 	
 	lpcv::Image newImage = image;
 
@@ -51,34 +52,7 @@ std::expected<lpcv::Image, lpcv::Status> lpcv::gaussian(const Image& image) {
 		{2,4,5,4,2}
 	}); 
 
-	/*Kernel kernel({
-		{0.0625,0.125,0.0625},
-		{0.125,0.25,0.125},
-		{0.0625,0.125,0.0625}
-		});*/
-
-	//std::vector<std::vector<float>> kernel = {
-	//	{-1,-1,-1},
-	//	{-1,8,-1},
-	//	{-1,-1,-1}
-
-	//};
-
-	/*lpcv::Kernel kernel({
-		{-1,0,1},
-		{-2,0,2},
-		{-1,0,1}
-	});*/
-	/*std::vector<std::vector<float>> kernel({
-		{-1,0,1},
-		{-2,0,2},
-		{-1,0,1}
-		});*/
-	
-
 	kernel.l1Normalise();
-	//kernel.standardisationNormalise();
-
 
 	return convoluteKernal(image, kernel);
 	

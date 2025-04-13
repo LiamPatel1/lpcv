@@ -62,7 +62,7 @@ namespace lpcv {
 					sum += get<float>(y,x);
 				}
 			}
-			float mean = sum / getSize();
+			float mean = sum / getDataSize();
 			float sqrsum = 0;
 			for (int y = 0; y < getHeight(); y++) {
 				for (int x = 0; x < getWidth(); x++) {
@@ -70,7 +70,7 @@ namespace lpcv {
 				}
 			}
 
-			float stddev = std::sqrt(sqrsum / getSize());
+			float stddev = std::sqrt(sqrsum / getDataSize());
 
 			for (int y = 0; y < getHeight(); y++) {
 				for (int x = 0; x < getWidth(); x++) {

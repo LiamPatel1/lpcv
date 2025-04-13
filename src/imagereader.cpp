@@ -55,7 +55,7 @@ std::expected<lpcv::Image, lpcv::Status> loadPNG(std::string fileName) {
     png_bytep* row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
 
 
-    lpcv::Image image({}, colourDepth, height, width, colourSpace);
+    lpcv::Image image({}, colourDepth, height, width, colourSpace, fileName);
 
     std::vector<unsigned char> buffer;
     for (uint32_t y = 0; y < height; y++) {

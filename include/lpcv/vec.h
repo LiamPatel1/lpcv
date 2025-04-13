@@ -49,7 +49,7 @@ namespace lpcv {
 		const uint8_t getDimensions() const {
 			return measurements.size();
 		}
-		const uint64_t getSize() const {
+		const uint64_t getDataSize() const {
 			return data.size();
 		}
 
@@ -68,18 +68,15 @@ namespace lpcv {
 			const size_t num_indices = sizeof...(Indices);
 			const uint32_t byte_depth = getByteDepth();
 
-			if (num_indices > num_dims) {
-				return nullptr;
-			}
+		
+			if (num_indices > num_dims) throw std::invalid_argument("Too many indicies given");
 
 			std::vector<uint32_t> index_vector(num_dims, 0);
 			size_t i = 0;
 			((index_vector[i++] = static_cast<uint32_t>(indices)), ...);
 
 			for (size_t j = 0; j < num_dims; ++j) {
-				if (index_vector[j] >= measurements[j]) {
-					return nullptr;
-				}
+				if (index_vector[j] >= measurements[j]) throw std::invalid_argument("Index out of image range");
 			}
 
 			std::vector<uint32_t> strides(num_dims, 1);
@@ -93,10 +90,7 @@ namespace lpcv {
 			}
 
 			const uint32_t byte_offset = linear_index * byte_depth;
-			if (byte_offset + byte_depth > data.size()) {
-				return nullptr;
-			}
-
+		
 			return data.data() + byte_offset;
 		}
 		
@@ -108,29 +102,14 @@ namespace lpcv {
 		}
 
 
-
-		template <typename T>
-		T get(const int i1, const int i2, const int i3) const {
-			if (measurements.size() != 3) throw std::invalid_argument("invalid dimension count for access");
-
-			const unsigned char* addr = &this->data[getByteDepth() * (measurements[2] * (i1 * measurements[1] + i2) + i3)];
-			T value;
-			std::memcpy(&value, addr, sizeof(T));
-			return value;
-
-		}
-		template <typename T>
-		T get(const int i1, const int i2) const {
 	
-			if (measurements.size() !=2) throw std::invalid_argument("invalid dimension count for access");
-
-			const unsigned char* addr = &this->data[getByteDepth() * ((i1 * measurements[1] + i2))];
+		template<typename T, typename... Indices>
+		const T get(Indices... indices) const {
+	
 			T value;
-			std::memcpy(&value, addr, sizeof(T));
+			std::memcpy(&value, at(indices...), sizeof(T));
 			return value;
-
 		}
-
 
 
 		
