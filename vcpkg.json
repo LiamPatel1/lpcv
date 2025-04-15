@@ -1,16 +1,16 @@
 {
   "dependencies": [
     {
-      "name": "qtbase",
-      "features": [
-        "widgets"
-      ]
+      "name": "glfw3"
     },
     {
       "name": "libpng"
     },
     {
       "name": "catch2"
+    },
+    {
+      "name": "glad"
     }
   ],
   "builtin-baseline": "49ac2134b31b95b0ddf29d56873dcd24392691df"

@@ -7,16 +7,17 @@ set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CAC
 project ("lpcv")
 
 find_package(PNG REQUIRED)
-find_package(Qt6 REQUIRED COMPONENTS WIDGETS)
+find_package(glfw3 REQUIRED)
 find_package(Catch2 3 REQUIRED)
-
+find_package(OpenGL REQUIRED)
+find_package(glad REQUIRED)
 
 
 set(source_files
 	"src/main.cpp"
 	"src/imagereader.cpp"
-	"src/viewer.cpp"
 	"src/convolution.cpp"
+	"src/viewer.cpp"
 )
 set(header_files
 	"include/lpcv.h"
@@ -37,35 +38,17 @@ set(tests_source_files
 	"tests/convolution_t.cpp"
 )
 
-
-add_library (lpcv STATIC
-				${source_files}
-				${header_files}
-)
+add_library (lpcv STATIC ${source_files} ${header_files})
 target_include_directories(lpcv PRIVATE include)
-target_link_libraries(lpcv PNG::PNG Qt6::Widgets)
-#set_property(TARGET lpcv PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+target_link_libraries(lpcv PNG::PNG glfw opengl32 glad::glad)
+set_property(TARGET lpcv PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
-add_executable (main
-				"src/main.cpp"
-)
+add_executable (main "src/main.cpp")
 target_include_directories(main PRIVATE include)
 target_link_libraries(main lpcv)
-#set_property(TARGET main PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG :Debug>:Debug>")
+set_property(TARGET main PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
-
-
-add_executable (tests
-				${tests_source_files}
-				${tests_header_files}
-				${header_files}
-)	
-
+add_executable (tests ${tests_source_files} ${tests_header_files} ${header_files})	
 target_include_directories(tests PRIVATE include)
-
 target_link_libraries(tests PRIVATE Catch2::Catch2WithMain lpcv)
-
-#set_property(TARGET tests PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-
-
-
+set_property(TARGET tests PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")

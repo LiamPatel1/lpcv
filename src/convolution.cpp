@@ -10,7 +10,6 @@ int mirrorIndex(int i, int bound) {
 	if (i > bound) return bound - std::abs(bound - i) ;
 	
 	return i;
-
 }
 
 

@@ -52,9 +52,6 @@ namespace lpcv {
 		}
 
 	
-		
-
-
 		void standardisationNormalise() {
 			float sum = 0;
 			for (int y = 0; y < getHeight(); y++) {
