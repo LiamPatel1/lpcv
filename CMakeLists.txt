@@ -1,10 +1,9 @@
-﻿cmake_minimum_required (VERSION 3.15)
+﻿cmake_minimum_required (VERSION 3.29)
 set(CMAKE_CXX_STANDARD 23)
 
+set(VCPKG_TARGET_TRIPLET "x64-windows-static")
 set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE FILEPATH "Path to toolchain")
-set(VCPKG_OVERLAY_TRIPLETS "./triplets")
-set(VCPKG_TARGET_TRIPLET "x64-windows-custom")
-
+ 
 project ("lpcv")
 
 find_package(PNG REQUIRED)
@@ -45,14 +44,14 @@ add_library (lpcv STATIC
 )
 target_include_directories(lpcv PRIVATE include)
 target_link_libraries(lpcv PNG::PNG Qt6::Widgets)
-set_property(TARGET lpcv PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+#set_property(TARGET lpcv PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 add_executable (main
 				"src/main.cpp"
 )
 target_include_directories(main PRIVATE include)
 target_link_libraries(main lpcv)
-set_property(TARGET main PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+#set_property(TARGET main PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG :Debug>:Debug>")
 
 
 
@@ -66,7 +65,7 @@ target_include_directories(tests PRIVATE include)
 
 target_link_libraries(tests PRIVATE Catch2::Catch2WithMain lpcv)
 
-set_property(TARGET tests PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+#set_property(TARGET tests PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 
 

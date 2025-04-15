@@ -2,7 +2,9 @@
   "dependencies": [
     {
       "name": "qtbase",
-      "features": [ "widgets" ]
+      "features": [
+        "widgets"
+      ]
     },
     {
       "name": "libpng"
@@ -10,7 +12,6 @@
     {
       "name": "catch2"
     }
-
   ],
-   "builtin-baseline": "acd5bba5aac8b6573b5f6f463dc0341ac0ee6fa4"
+  "builtin-baseline": "49ac2134b31b95b0ddf29d56873dcd24392691df"
 }
