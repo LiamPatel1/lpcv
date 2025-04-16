@@ -54,6 +54,11 @@ namespace lpcv {
 		const uint32_t getChannelCount() const {
 			return measurements[2];
 		}
+		const uint32_t getNonAlphaChannelCount() const {
+			if (hasAplha()) 
+				return measurements[2] - 1;
+			return measurements[2];
+		}
 
 		const uint64_t getSubPixel_U64(const int i1, const int i2 = 0, const int i3 = 0) const {
 			uint64_t val = 0;
@@ -61,7 +66,8 @@ namespace lpcv {
 			return val;
 		}
 
-		
+	
+
 		void setValue(float value, int i1, int i2, int i3) {
 
 			switch (type) {
@@ -72,6 +78,7 @@ namespace lpcv {
 				case TYPE_U8: {
 					const float clamped = std::clamp(std::round(value), 0.0f, 255.0f);
 					uint8_t newval = static_cast<uint8_t>(clamped);		
+					unsigned char* dfgfd = this->at(i1, i2, i3);
 					memcpy(this->at(i1, i2, i3), &newval, 1);
 					break;
 				}
@@ -136,13 +143,18 @@ namespace lpcv {
 			return this->name;
 		}
 
-		uint64_t getPixelCount() {
+		uint64_t getPixelCount() const {
 			return getHeight() * getWidth();
 		}
-		uint64_t getSubPixelCount() {
+		uint64_t getSubPixelCount() const {
 			return getHeight() * getWidth() * getChannelCount();
 		}
 
+		bool hasAplha() const {
+			if (colourSpace == GA || colourSpace == RGBA) 
+				return true;
+			return false;
+		}
 
 		Image expand_bitDepth(uint8_t newBitDepth) {
 			if (newBitDepth <= getBitDepth()) return Image(*this);

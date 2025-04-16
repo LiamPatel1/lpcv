@@ -7,3 +7,4 @@
 #include"lpcv/image.h"
 #include"lpcv/convolution.h"
 #include"lpcv/enum.h"
+#include"lpcv/operators.h"

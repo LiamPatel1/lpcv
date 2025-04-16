@@ -22,7 +22,6 @@ std::expected<lpcv::Image, lpcv::Status> lpcv::convoluteKernal(const lpcv::Image
 	for (int y = 0; y < image.getHeight(); y++) {
 		for (int x = 0; x < image.getWidth(); x++) {
 			for (int channel = 0; channel < image.getChannelCount(); channel++) {
-
 				float total = 0;
 				for (int kernely = -heightFromCentre; kernely <= heightFromCentre; kernely++) {
 					for (int kernelx = -widthFromCentre; kernelx <= widthFromCentre; kernelx++) {
@@ -55,5 +54,27 @@ std::expected<lpcv::Image, lpcv::Status> lpcv::gaussian(const Image& image) {
 
 	return convoluteKernal(image, kernel);
 	
+}
+
+std::expected<lpcv::Image, lpcv::Status> lpcv::sobel(const Image& image) {
+
+	Kernel x({
+		{-1, 0, 1},
+		{-2, 0, 2},
+		{-1, 0, 1}
+		});
+
+	Kernel y({
+		{-1, -2, -1},
+		{0,0,0},
+		{1,2,1}
+		});
+
+	x.l1Normalise();
+	y.l1Normalise();
+
+
+	return convoluteKernal(*convoluteKernal(image,x), y);
+
 }
 

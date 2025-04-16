@@ -10,9 +10,11 @@ int main() {
 
 	auto image = loadPNG("C:\\Users\\liamp\\Desktop\\examplea.png");
 	CHECK(image);
-	image = lpcv::gaussian(*image);
-
+	auto image2 = lpcv::greyscale(*image);
+	
 	lpcv::display(*image);
+	lpcv::display(image2);
+
 
 
 

@@ -42,22 +42,10 @@ void lpcv::display(const lpcv::Image& image) {
         (mode->height - 600) / 2   // Center vertically
     );
 
-    int windowWidth, windowHeight;
-    glfwGetWindowSize(window, &windowWidth, &windowHeight);
-    float windowAspect = (float)windowWidth / (float)windowHeight;
+    
     float imageAspect = (float)image.getWidth() / (float)image.getHeight();
 
-    float scaleX, scaleY;
-    if (imageAspect > windowAspect) {
-        // Image is wider than window → scale vertically
-        scaleX = 1.0f;
-        scaleY = windowAspect / imageAspect;
-    }
-    else {
-        // Image is taller than window → scale horizontally
-        scaleX = imageAspect / windowAspect;
-        scaleY = 1.0f;
-    }
+    
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
@@ -163,13 +151,7 @@ void lpcv::display(const lpcv::Image& image) {
     glDeleteShader(fragmentShader);
 
     // Vertex data
-    float vertices[] = {
-        // Positions          // Texture Coords
-         scaleX,  scaleY,     1.0f, 0.0f, // Top-right
-         scaleX, -scaleY,     1.0f, 1.0f, // Bottom-right
-        -scaleX, -scaleY,     0.0f, 1.0f, // Bottom-left
-        -scaleX,  scaleY,     0.0f, 0.0f  // Top-left
-    };
+ 
     unsigned int indices[] = {
         0, 1, 3, // first triangle
         1, 2, 3  // second triangle
@@ -185,7 +167,6 @@ void lpcv::display(const lpcv::Image& image) {
 
     // Configure VBO
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     // Configure EBO
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -201,6 +182,35 @@ void lpcv::display(const lpcv::Image& image) {
 
     // Main rendering loop
     while (!glfwWindowShouldClose(window)) {
+
+
+        int windowWidth, windowHeight;
+        glfwGetWindowSize(window, &windowWidth, &windowHeight);
+        float windowAspect = (float)windowWidth / (float)windowHeight;
+        float scaleX, scaleY;
+        if (imageAspect > windowAspect) {
+            // Image is wider than window → scale vertically
+            scaleX = 1.0f;
+            scaleY = windowAspect / imageAspect;
+        }
+        else {
+            // Image is taller than window → scale horizontally
+            scaleX = imageAspect / windowAspect;
+            scaleY = 1.0f;
+        }
+        float vertices[] = {
+            // Positions          // Texture Coords
+             scaleX,  scaleY,     1.0f, 0.0f, // Top-right
+             scaleX, -scaleY,     1.0f, 1.0f, // Bottom-right
+            -scaleX, -scaleY,     0.0f, 1.0f, // Bottom-left
+            -scaleX,  scaleY,     0.0f, 0.0f  // Top-left
+        };
+
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+
+
+
         // Clear screen
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);

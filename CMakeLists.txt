@@ -18,7 +18,7 @@ set(source_files
 	"src/imagereader.cpp"
 	"src/convolution.cpp"
 	"src/viewer.cpp"
-)
+ "src/operators.cpp")
 set(header_files
 	"include/lpcv.h"
 	"include/lpcv/viewer.h"
@@ -28,7 +28,7 @@ set(header_files
 	"include/lpcv/kernel.h"
 	"include/lpcv/image.h"
 	"include/lpcv/enum.h"
-)
+ "include/lpcv/operators.h")
 
 set(tests_header_files
 	"include/tests/convolution_t.h"
