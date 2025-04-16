@@ -9,7 +9,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 }
 
 void lpcv::display(const lpcv::Image& image) {
-    // Initialize GLFW
+
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW\n";
         return;
@@ -24,7 +24,7 @@ void lpcv::display(const lpcv::Image& image) {
     GLFWwindow* window = glfwCreateWindow(
         700,
         600,
-        "LPCV Image Display",
+        image.getName().c_str(),
         nullptr, nullptr
     );
 
@@ -109,9 +109,18 @@ void lpcv::display(const lpcv::Image& image) {
     }
 
     // Upload texture data
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+    int glType;
+    if (image.getColourSpace() == lpcv::RGBA) glType = GL_RGBA;
+    else if (image.getColourSpace() == lpcv::RGB) glType = GL_RGB;
+    else {
+        std::cerr << "Type not supported";
+        return;
+    }
+    
+
+    glTexImage2D(GL_TEXTURE_2D, 0, glType,
         image.getWidth(), image.getHeight(),
-        0, GL_RGBA, GL_UNSIGNED_BYTE,
+        0, glType, GL_UNSIGNED_BYTE,
         finalData);
 
     // Shader program

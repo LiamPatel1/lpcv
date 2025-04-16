@@ -8,7 +8,7 @@
 
 int main() {
 
-	auto image = loadPNG("C:\\Users\\liamp\\Desktop\\untitled3.png");
+	auto image = loadPNG("C:\\Users\\liamp\\Desktop\\examplea.png");
 	CHECK(image);
 	image = lpcv::gaussian(*image);
 
