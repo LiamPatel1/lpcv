@@ -2,6 +2,7 @@
 
 #include"lpcv/vec.h"
 #include"lpcv/enum.h"
+#include"lpcv/misc.h"
 #include<cmath>
 
 namespace lpcv {
@@ -12,106 +13,57 @@ namespace lpcv {
 
 	public:
 
-		Image(std::vector<unsigned char> data, uint8_t bitDepth, uint32_t height, uint32_t width, ColourSpace colourSpace, std::string name="image") {
-			this->name = name;
+		Image(std::vector<unsigned char> data, uint8_t bitDepth, uint32_t height, uint32_t width, ColourSpace colourSpace, std::string name = "image")
+			: name(name), colourSpace(colourSpace) {
+		
 
-			this->colourSpace = colourSpace;
-
-			if (bitDepth <= 8) this->type = TYPE_U8;
-			else if (bitDepth <= 16) this->type = TYPE_U16;
-			else if (bitDepth <= 32) this->type = TYPE_U32;
-			else if (bitDepth <= 64) this->type = TYPE_U64;
-
-			uint32_t channelCount;
-			switch (this->colourSpace) {
-			case RGB: 
-				channelCount = 3;
-				break;
-			case RGBA: 
-				channelCount = 4;
-				break;
-			case G:
-				channelCount = 1;
-				break;
-			case GA: 
-				channelCount = 2;
-				break;
-			default: channelCount = 0;
-			}
-
-			this->measurements = { height, width, channelCount };
-
-
+			this->type = getImageTypeFromBitDepth(bitDepth);
 			this->data = data;
+			this->measurements = { height, width, getChannelCount() };
 		}
 
 		const uint32_t getHeight() const {
 			return measurements[0];
 		}
+
+		
+
 		const uint32_t getWidth() const {
 			return measurements[1];
 		}
 		const uint32_t getChannelCount() const {
-			return measurements[2];
+			switch (this->colourSpace) {
+			case RGB:
+				return 3;
+			case RGBA:
+				return 4;
+			case G:
+				return 1;
+			case GA:
+				return 2;
+			}
+			throw std::invalid_argument("colour space invalid");
 		}
+
+
+
 		const uint32_t getNonAlphaChannelCount() const {
-			if (hasAplha()) 
+			if (hasAlpha()) 
 				return measurements[2] - 1;
 			return measurements[2];
 		}
 
-		const uint64_t getSubPixel_U64(const int i1, const int i2 = 0, const int i3 = 0) const {
+		const uint64_t getSubPixel_U64(const int i1, const int i2, const int i3) const {
 			uint64_t val = 0;
 			std::memcpy(&val, this->at(i1, i2, i3), this->getByteDepth());
 			return val;
 		}
-
-	
-
-		void setValue(float value, int i1, int i2, int i3) {
-
-			switch (type) {
-				case TYPE_FLOAT: {
-					memcpy(this->at(i1, i2, i3), (&value), 4);
-					break;
-				}
-				case TYPE_U8: {
-					const float clamped = std::clamp(std::round(value), 0.0f, 255.0f);
-					uint8_t newval = static_cast<uint8_t>(clamped);		
-					unsigned char* dfgfd = this->at(i1, i2, i3);
-					memcpy(this->at(i1, i2, i3), &newval, 1);
-					break;
-				}
-				case TYPE_U16: {
-					const float clamped = std::clamp(std::round(value), 0.0f, 65535.0f);
-					uint16_t newval = static_cast<uint16_t>(clamped);
-					memcpy(this->at(i1, i2, i3), &newval, 2);
-					break;
-				}
-				case TYPE_U32: {
-					const float clamped = std::clamp(std::round(value),
-						0.0f,
-						static_cast<float>(std::numeric_limits<uint32_t>::max())
-					);
-					uint32_t newval = static_cast<uint32_t>(clamped);
-					memcpy(this->at(i1, i2, i3), &newval, 4);
-					break;
-				}
-				case TYPE_U64: {
-					const double clamped = std::clamp(
-						static_cast<double>(std::round(value)),
-						0.0,
-						static_cast<double>(std::numeric_limits<uint64_t>::max())
-					);
-					uint64_t newval = static_cast<uint64_t>(clamped);
-					memcpy(this->at(i1, i2, i3), &newval, 8);
-					break;
-				}
-
-			}
-
+		const uint64_t getSubPixel_U64(const int i) const {
+			uint64_t val = 0;
+			std::memcpy(&val, &data[i*getByteDepth()], this->getByteDepth());
+			return val;
 		}
-		
+
 
 		const std::vector<unsigned char> getSubPixel_ByteArray(const int i) const {
 			const unsigned char* addr = &data[i*getByteDepth()];
@@ -150,7 +102,7 @@ namespace lpcv {
 			return getHeight() * getWidth() * getChannelCount();
 		}
 
-		bool hasAplha() const {
+		bool hasAlpha() const {
 			if (colourSpace == GA || colourSpace == RGBA) 
 				return true;
 			return false;
@@ -189,6 +141,36 @@ namespace lpcv {
 			return Image(newData, getBitDepth(), getHeight(), getWidth(), RGBA);
 
 		}
+
+		Image expand_G_RGB__GA_RGBA() {
+			if (getColourSpace() != G && getColourSpace() != GA) throw std::invalid_argument("Non-grey image passed into expand_G_RGB__GA_RGBA");
+
+
+			std::vector<unsigned char> newData;
+
+			for (int i = 0; i < getSubPixelCount(); i+= getChannelCount()) {
+				std::vector<unsigned char> pixelData = getSubPixel_ByteArray(i);
+				newData.insert(newData.end(), pixelData.begin(), pixelData.end());
+				newData.insert(newData.end(), pixelData.begin(), pixelData.end());
+				newData.insert(newData.end(), pixelData.begin(), pixelData.end());
+
+
+				if (hasAlpha()) {
+					std::vector<unsigned char> pixelData = getSubPixel_ByteArray(i+1);
+					newData.insert(newData.end(), pixelData.begin(), pixelData.end());
+				}
+
+			}
+			ColourSpace newSpace = lpcv::RGB;
+			if (hasAlpha()) {
+				newSpace = RGBA;
+
+			}
+			return Image(newData, getBitDepth(), getHeight(), getWidth(), newSpace, getName());
+		}
+
+		
+
 
 	};
 };

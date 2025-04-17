@@ -8,7 +8,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-void lpcv::display(const lpcv::Image& image) {
+void lpcv::display(lpcv::Image image) {
 
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW\n";
@@ -66,6 +66,32 @@ void lpcv::display(const lpcv::Image& image) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+
+
+    int glType;
+    switch (image.getColourSpace()) {
+    case G:
+        image = image.expand_G_RGB__GA_RGBA();
+        glType = GL_RGB;
+        break;
+    case RGB:
+        glType = GL_RGB;
+        break;
+    case GA:
+        image = image.expand_G_RGB__GA_RGBA();
+        glType = GL_RGBA;
+        break;
+    case RGBA:
+        glType = GL_RGBA;
+        break;
+    default:
+        std::cerr << "Type not supported";
+        return;
+    }
+
+
+
+
     // Handle bit depth conversion
     const auto& data = image.getData();
     const int depth = image.getBitDepth();
@@ -96,14 +122,9 @@ void lpcv::display(const lpcv::Image& image) {
         finalData = convertedData.data();
     }
 
-    // Upload texture data
-    int glType;
-    if (image.getColourSpace() == lpcv::RGBA) glType = GL_RGBA;
-    else if (image.getColourSpace() == lpcv::RGB) glType = GL_RGB;
-    else {
-        std::cerr << "Type not supported";
-        return;
-    }
+    
+
+
     
 
     glTexImage2D(GL_TEXTURE_2D, 0, glType,

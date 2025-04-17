@@ -8,13 +8,11 @@
 
 int main() {
 
-	auto image = loadPNG("C:\\Users\\liamp\\Desktop\\examplea.png");
-	CHECK(image);
-	auto image2 = lpcv::greyscale(*image);
+	auto image = *loadPNG("C:\\Users\\liamp\\Desktop\\example.png");
 	
-	lpcv::display(*image);
-	lpcv::display(image2);
+	image = *lpcv::sobel(image);
 
+	lpcv::display(image);
 
 
 

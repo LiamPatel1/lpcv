@@ -2,10 +2,9 @@
 #include<vector>
 
 namespace lpcv {
-	typedef unsigned char uchar;
-	typedef std::vector<uchar> byteArray;
+		
 
-	enum Type { TYPE_NONE, TYPE_U8, TYPE_U16, TYPE_U32, TYPE_U64, TYPE_FLOAT };
+	enum Type { TYPE_NONE, TYPE_U8, TYPE_U16, TYPE_FLOAT };
 
 
 	enum ColourSpace {

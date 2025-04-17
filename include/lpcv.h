@@ -8,3 +8,7 @@
 #include"lpcv/convolution.h"
 #include"lpcv/enum.h"
 #include"lpcv/operators.h"
+#include"lpcv/bytearray.h"
+#include"lpcv/misc.h"
+
+

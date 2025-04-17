@@ -9,6 +9,7 @@
 #include<algorithm>
 
 #include"lpcv/enum.h"
+#include "bytearray.h"
 
 namespace lpcv {
 
@@ -17,35 +18,33 @@ namespace lpcv {
 	class Vec {
 
 	protected:
+
 		std::vector<unsigned char> data;
-		std::vector<uint32_t> measurements;
 		Type type;
+		std::vector<uint32_t> measurements;
 
 	public:
 
 
 		const uint8_t getBitDepth() const {
 			switch (type) {
-				case TYPE_U8:
-					return 8;
-				case TYPE_U16:
-					return 16;
-				case TYPE_U32:
-					return 32;
-				case TYPE_U64:
-					return 64;
-				case TYPE_FLOAT:
-					return 32;
-				default:
-					return 0;
+			case TYPE_U8:
+				return 8;
+			case TYPE_U16:
+				return 16;
+			case TYPE_FLOAT:
+				return 32;
+			default:
+				throw std::invalid_argument("Invalid image type");
 			}
-			
+
 		}
 
 		const uint8_t getByteDepth() const {
 			return (getBitDepth() / 8);
 		}
 
+	
 		const uint8_t getDimensions() const {
 			return measurements.size();
 		}
@@ -57,9 +56,9 @@ namespace lpcv {
 			return this->data;
 		}
 
-		void insertData(std::vector<unsigned char> newData) {
+		/*void insertData(std::vector<unsigned char> newData) {
 			data.insert(data.end(), newData.begin(), newData.end());
-		}
+		}*/
 
 
 		template<typename... Indices>
@@ -90,8 +89,11 @@ namespace lpcv {
 			}
 
 			const uint32_t byte_offset = linear_index * byte_depth;
-		
-			return data.data() + byte_offset;
+			
+			
+			const unsigned char* g = data.data();
+
+			return g + byte_offset;
 		}
 		
 
@@ -103,6 +105,34 @@ namespace lpcv {
 
 
 	
+		template<typename... Indices>
+		void setValue(float value, Indices...indicies) {
+			switch (type) {
+
+			case TYPE_FLOAT: {
+				memcpy(at(indicies...), (&value), 4);
+				break;
+			}
+			case TYPE_U8: {
+				const float clamped = std::clamp(std::round(value), 0.0f, 255.0f);
+				uint8_t newval = static_cast<uint8_t>(clamped);
+				unsigned char* dfgfdg = at(indicies...);
+				memcpy(at(indicies...), &newval, 1);
+				break;
+			}
+			case TYPE_U16: {
+				const float clamped = std::clamp(std::round(value), 0.0f, 65535.0f);
+				uint16_t newval = static_cast<uint16_t>(clamped);
+				memcpy(at(indicies...), &newval, 2);
+				break;
+			}
+			}
+		}
+
+
+
+
+
 		template<typename T, typename... Indices>
 		const T get(Indices... indices) const {
 	
@@ -117,20 +147,30 @@ namespace lpcv {
 		Vec(std::vector<unsigned char> data, lpcv::Type type, std::vector<uint32_t> measurements)
 			: measurements(measurements), data(data), type(type) {}
 
-		Vec() : measurements({}), type(lpcv::TYPE_NONE), data({}) {}
+		Vec(ByteArray data, std::vector<uint32_t> measurements) : data((std::vector<unsigned char>)data), measurements(measurements), type(data.type) {}
 
-		Vec(unsigned char* data, lpcv::Type type, std::vector<uint32_t> measurements)
-			: measurements(measurements), type(type) {
+		Vec() : measurements({}), data({}), type(lpcv::TYPE_NONE) {}
+
+
+
+
+		/*Vec(unsigned char* data, lpcv::Type type, std::vector<uint32_t> measurements)
+			: measurements(measurements) {
+
 
 			uint64_t dataSize = 0;
 			for (int i = 0; i < measurements.size(); i++) 
 				dataSize *= measurements[i];
-			dataSize *= (getBitDepth()/8);
+			dataSize *= getByteDepth();
+
+
+			ByteArray newData({}, type);
 			for (int i = 0 ; i < dataSize ; i++) {
-				this->data.push_back(data[i]);
+				newData.push_back(data[i]);
 			
 			}
-		}
+			this->data = newData;
+		}*/
 
 	};
 }

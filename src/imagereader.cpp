@@ -33,6 +33,8 @@ std::expected<lpcv::Image, lpcv::Status> loadPNG(std::string fileName) {
     uint32_t width = png_get_image_width(png, info);
     uint32_t height = png_get_image_height(png, info);
     uint8_t colourDepth = png_get_bit_depth(png, info);
+    uint64_t bytesPerRow = png_get_rowbytes(png, info);
+
     lpcv::ColourSpace colourSpace; 
     switch (png_get_color_type(png, info)) {
         case 0:
@@ -55,15 +57,15 @@ std::expected<lpcv::Image, lpcv::Status> loadPNG(std::string fileName) {
     png_bytep* row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
 
 
-    lpcv::Image image({}, colourDepth, height, width, colourSpace, fileName);
 
     std::vector<unsigned char> buffer;
     for (uint32_t y = 0; y < height; y++) {
         row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(png, info));  
         png_read_row(png, row_pointers[y], NULL);
-        buffer.insert(buffer.end(), (unsigned char*)row_pointers[y], (unsigned char*)row_pointers[y]+image.getBytesPerRow());
+        buffer.insert(buffer.end(), (unsigned char*)row_pointers[y], (unsigned char*)row_pointers[y]+bytesPerRow);
     }
-    image.insertData(buffer);
+
+    lpcv::Image image(buffer, colourDepth, height, width, colourSpace, fileName);
 
     
     fclose(fp);

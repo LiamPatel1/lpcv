@@ -70,11 +70,17 @@ std::expected<lpcv::Image, lpcv::Status> lpcv::sobel(const Image& image) {
 		{1,2,1}
 		});
 
-	x.l1Normalise();
-	y.l1Normalise();
+	//x.l1Normalise();
+	//y.l1Normalise();
+
+	Image newImage = greyscale(image);
+	Image newImagex = *convoluteKernal(newImage, x);
+	Image newImagey = *convoluteKernal(newImage, y);
+	newImage = lpcv::pythag(newImagex, newImagey);
+	newImage = newImage.expand_G_RGB__GA_RGBA();
 
 
-	return convoluteKernal(*convoluteKernal(image,x), y);
+	return newImage;
 
 }
 
