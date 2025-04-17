@@ -1,6 +1,7 @@
 #pragma once
 
 #include"lpcv/enum.h"
+#include <numbers>
 
 namespace lpcv {
 	inline lpcv::Type getImageTypeFromBitDepth(int bitDepth) {
@@ -16,6 +17,11 @@ namespace lpcv {
 		}
 		return lpcv::TYPE_NONE;
 
+	}
+
+
+	inline double radToDeg(double rad) {
+		return rad * (180 / std::numbers::pi);
 	}
 
 }

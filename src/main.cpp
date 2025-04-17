@@ -8,10 +8,11 @@
 
 int main() {
 
-	auto image = *loadPNG("C:\\Users\\liamp\\Desktop\\example.png");
+	auto image = loadPNG("C:\\Users\\liamp\\Desktop\\example.png");
 	
-	image = *lpcv::sobel(image);
+	image = lpcv::gaussian(image);
 
+	image = lpcv::sobel(image);
 	lpcv::display(image);
 
 

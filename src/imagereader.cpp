@@ -6,16 +6,16 @@
 
 
 
-std::expected<lpcv::Image, lpcv::Status> loadPNG(std::string fileName) {
+lpcv::Image loadPNG(std::string fileName) {
     
     FILE* fp = fopen(fileName.c_str(), "rb");
-    if (!fp) return std::unexpected(lpcv::ERROR_OPEN_FILE);
+    if (!fp) throw std::invalid_argument("Error opening file");
 
     png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-    if (!png) return std::unexpected(lpcv::ERROR_NOT_PNG);
+    if (!png) throw std::invalid_argument("file not png");
 
     png_infop info = png_create_info_struct(png);
-    if (!info) return std::unexpected(lpcv::ERROR_PNG_INFO_CREATION);
+    if (!info) throw std::invalid_argument("Error getting png info");
 
     png_init_io(png, fp);
 
@@ -50,7 +50,7 @@ std::expected<lpcv::Image, lpcv::Status> loadPNG(std::string fileName) {
             colourSpace = lpcv::RGBA;
             break;
         default:
-            return std::unexpected(lpcv::ERROR_UNSUPPORTED_COLOUR_SPACE);
+            throw std::invalid_argument("unsupported colour type");;
     }
 
 

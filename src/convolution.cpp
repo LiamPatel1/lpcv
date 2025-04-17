@@ -13,7 +13,7 @@ int mirrorIndex(int i, int bound) {
 }
 
 
-std::expected<lpcv::Image, lpcv::Status> lpcv::convoluteKernal(const lpcv::Image& image, const lpcv::Kernel kernel) {
+lpcv::Image lpcv::convoluteKernal(const lpcv::Image& image, const lpcv::Kernel kernel) {
 	
 	lpcv::Image newImage = image;
 
@@ -40,7 +40,7 @@ std::expected<lpcv::Image, lpcv::Status> lpcv::convoluteKernal(const lpcv::Image
 
 
 
-std::expected<lpcv::Image, lpcv::Status> lpcv::gaussian(const Image& image) {
+lpcv::Image lpcv::gaussian(const Image& image) {
 
 	Kernel kernel({
 		{2,4,5,4,2},
@@ -56,7 +56,7 @@ std::expected<lpcv::Image, lpcv::Status> lpcv::gaussian(const Image& image) {
 	
 }
 
-std::expected<lpcv::Image, lpcv::Status> lpcv::sobel(const Image& image) {
+lpcv::Image lpcv::sobel(const Image& image) {
 
 	Kernel x({
 		{-1, 0, 1},
@@ -74,11 +74,11 @@ std::expected<lpcv::Image, lpcv::Status> lpcv::sobel(const Image& image) {
 	//y.l1Normalise();
 
 	Image newImage = greyscale(image);
-	Image newImagex = *convoluteKernal(newImage, x);
-	Image newImagey = *convoluteKernal(newImage, y);
+	Image newImagex = convoluteKernal(newImage, x);
+	Image newImagey = convoluteKernal(newImage, y);
 	newImage = lpcv::pythag(newImagex, newImagey);
+	auto angles = findAngles(newImagex, newImagey);
 	newImage = newImage.expand_G_RGB__GA_RGBA();
-
 
 	return newImage;
 
