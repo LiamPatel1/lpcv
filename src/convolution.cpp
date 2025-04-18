@@ -66,8 +66,8 @@ lpcv::Image lpcv::sobel(const Image& image) {
 
 	Kernel y({
 		{-1, -2, -1},
-		{0,0,0},
-		{1,2,1}
+		{ 0,  0,  0},
+		{ 1,  2,  1}
 		});
 
 	//x.l1Normalise();

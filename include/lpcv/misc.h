@@ -24,4 +24,8 @@ namespace lpcv {
 		return rad * (180 / std::numbers::pi);
 	}
 
+	inline double DegToRad(double deg) {
+		return deg * (std::numbers::pi / 180);
+	}
+
 }

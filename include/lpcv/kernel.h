@@ -5,8 +5,6 @@
 
 namespace lpcv {
 	class Kernel : public Vec {
-		
-
 
 
 	public:
@@ -28,11 +26,6 @@ namespace lpcv {
 
 
 		}
-
-
-		
-
-
 
 		const uint32_t getHeight() const {
 			return this->measurements[0];
