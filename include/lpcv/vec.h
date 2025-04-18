@@ -129,10 +129,7 @@ namespace lpcv {
 			}
 		}
 
-
-
-
-
+	
 		template<typename T, typename... Indices>
 		const T get(Indices... indices) const {
 	
@@ -140,7 +137,6 @@ namespace lpcv {
 			std::memcpy(&value, at(indices...), sizeof(T));
 			return value;
 		}
-
 
 		
 
@@ -150,27 +146,6 @@ namespace lpcv {
 		Vec(ByteArray data, std::vector<uint32_t> measurements) : data((std::vector<unsigned char>)data), measurements(measurements), type(data.type) {}
 
 		Vec() : measurements({}), data({}), type(lpcv::TYPE_NONE) {}
-
-
-
-
-		/*Vec(unsigned char* data, lpcv::Type type, std::vector<uint32_t> measurements)
-			: measurements(measurements) {
-
-
-			uint64_t dataSize = 0;
-			for (int i = 0; i < measurements.size(); i++) 
-				dataSize *= measurements[i];
-			dataSize *= getByteDepth();
-
-
-			ByteArray newData({}, type);
-			for (int i = 0 ; i < dataSize ; i++) {
-				newData.push_back(data[i]);
-			
-			}
-			this->data = newData;
-		}*/
 
 	};
 }

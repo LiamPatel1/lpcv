@@ -8,7 +8,8 @@ namespace lpcv {
 	Image convoluteKernal(const lpcv::Image& image, const lpcv::Kernel kernel);
 
 	Image gaussian(const Image& image);
-	Image sobel(const Image& image);
+	Image canny(const Image& image);
+
 
 
 	}

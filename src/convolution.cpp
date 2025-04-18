@@ -4,13 +4,6 @@
 #include <random>
 #include<cmath>
 
-int mirrorIndex(int i, int bound) {
-	if (bound < 0) throw std::invalid_argument("Negative bound");
-	if (i < 0) return ~i;
-	if (i > bound) return bound - std::abs(bound - i) ;
-	
-	return i;
-}
 
 
 lpcv::Image lpcv::convoluteKernal(const lpcv::Image& image, const lpcv::Kernel kernel) {
@@ -56,7 +49,7 @@ lpcv::Image lpcv::gaussian(const Image& image) {
 	
 }
 
-lpcv::Image lpcv::sobel(const Image& image) {
+lpcv::Image lpcv::canny(const Image& image) {
 
 	Kernel x({
 		{-1, 0, 1},
@@ -70,17 +63,19 @@ lpcv::Image lpcv::sobel(const Image& image) {
 		{ 1,  2,  1}
 		});
 
-	//x.l1Normalise();
-	//y.l1Normalise();
 
-	Image newImage = greyscale(image);
-	Image newImagex = convoluteKernal(newImage, x);
-	Image newImagey = convoluteKernal(newImage, y);
-	newImage = lpcv::pythag(newImagex, newImagey);
+	Image grey = greyscale(image);
+	grey = gaussian(grey);
+	Image newImagex = convoluteKernal(grey, x);
+	Image newImagey = convoluteKernal(grey, y);
+	Image magnitudes = lpcv::pythag(newImagex, newImagey);
 	auto angles = findAngles(newImagex, newImagey);
-	newImage = newImage.expand_G_RGB__GA_RGBA();
+	auto newImage = edgeSuppression(magnitudes, angles);
+
+	display(grey);
+	display(magnitudes);
+	display(newImage);
 
 	return newImage;
 
 }
-

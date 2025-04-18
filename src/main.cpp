@@ -12,7 +12,7 @@ int main() {
 	
 	image = lpcv::gaussian(image);
 
-	image = lpcv::sobel(image);
+	image = lpcv::canny(image);
 	lpcv::display(image);
 
 

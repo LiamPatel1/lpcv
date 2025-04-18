@@ -68,12 +68,12 @@ lpcv::Vec lpcv::findAngles(lpcv::Image& ImgX, lpcv::Image& ImgY) {
 	if (ImgX.getHeight() != ImgY.getHeight()) throw std::invalid_argument("images have different sizes");
 	if (ImgX.getWidth() != ImgY.getWidth()) throw std::invalid_argument("images have different sizes");
 
-	lpcv::Vec angles(std::vector<unsigned char>(ImgX.getSubPixelCount() * 1), TYPE_U8, { ImgX.getHeight(), ImgX.getWidth(), ImgX.getChannelCount() });
+	lpcv::Vec angles(std::vector<unsigned char>(ImgX.getSubPixelCount()), TYPE_U8, { ImgX.getHeight(), ImgX.getWidth(), ImgX.getChannelCount() });
 
 	for (int y = 0; y < ImgX.getHeight(); y++) {
-		for (int x = 0; x < ImgX.getWidth(); x++)
+		for (int x = 0; x < ImgX.getWidth(); x++) {
 			for (int sub = 0; sub < ImgX.getChannelCount(); sub++) {
-				float newVal = std::atan2((float)(ImgY.getSubPixel_U64(y, x, sub)-127.5), (float)(ImgX.getSubPixel_U64(y, x, sub)-127.5));
+				float newVal = std::atan2((float)(ImgY.getSubPixel_U64(y, x, sub) - 127.5), (float)(ImgX.getSubPixel_U64(y, x, sub) - 127.5));
 				newVal = lpcv::radToDeg(newVal);
 				if (newVal < 0) {
 					newVal += 360;
@@ -87,6 +87,44 @@ lpcv::Vec lpcv::findAngles(lpcv::Image& ImgX, lpcv::Image& ImgY) {
 
 				angles.setValue(newVal, y, x, sub);
 			}
+		}
 	}
 	return angles;
+}
+
+lpcv::Image lpcv::edgeSuppression(const lpcv::Image& magnitudes, const lpcv::Vec& angles) {
+
+	lpcv::Image newImage(magnitudes);
+	for (int y = 0; y < magnitudes.getHeight(); y++) {
+		for (int x = 0; x < magnitudes.getWidth(); x++) {
+			for (int sub = 0; sub < magnitudes.getChannelCount(); sub++) {
+				int xoffset = 0;
+				switch (angles.get<uint8_t>(y, x, sub)) {
+				case 0: 
+					continue;
+				case 45:
+					 xoffset = 1;
+					break;
+				case 90:
+					 xoffset = 0;
+					break;
+				case 135:
+					 xoffset = -1;
+					break;
+				default: throw std::invalid_argument("Invalid edge angle");
+				}
+				
+				if (magnitudes.getSubPixel_U64(y, x, sub) < magnitudes.getSubPixel_U64(mirrorIndex(y + 1, magnitudes.getHeight()), mirrorIndex(x + xoffset, magnitudes.getWidth()), sub) 
+					|| magnitudes.getSubPixel_U64(y, x, sub) < magnitudes.getSubPixel_U64(mirrorIndex(y - 1, magnitudes.getHeight()), mirrorIndex(x - xoffset, magnitudes.getWidth()), sub)) {
+					newImage.setValue(0, y, x, sub);
+				}
+				
+
+
+
+			}
+		}
+	}
+
+	return newImage;
 }
