@@ -5,6 +5,32 @@
 #include<cmath>
 
 
+lpcv::Vec lpcv::convoluteKernal(const lpcv::Vec& image, const lpcv::Kernel kernel) {
+
+	lpcv::Vec newImage = image;
+
+	int widthFromCentre = (kernel.getWidth() - 1) / 2;
+	int heightFromCentre = (kernel.getHeight() - 1) / 2;
+	for (int y = 0; y < image.getMeasurements()[0]; y++) {
+		for (int x = 0; x < image.getMeasurements()[1]; x++) {
+			for (int channel = 0; channel < image.getMeasurements()[2]; channel++) {
+				float total = 0;
+				for (int kernely = -heightFromCentre; kernely <= heightFromCentre; kernely++) {
+					for (int kernelx = -widthFromCentre; kernelx <= widthFromCentre; kernelx++) {
+
+						total += kernel.get<float>(kernely + heightFromCentre, kernelx + widthFromCentre) * image.getValue_FLOAT(mirrorIndex(y + kernely, image.getMeasurements()[0] - 1), mirrorIndex(x + kernelx, image.getMeasurements()[1] - 1), channel);
+						
+					}
+				}
+				newImage.setValue(total, y, x, channel);
+
+			}
+
+		}
+	}
+	return newImage;
+}
+
 
 lpcv::Image lpcv::convoluteKernal(const lpcv::Image& image, const lpcv::Kernel kernel) {
 	
@@ -66,9 +92,9 @@ lpcv::Image lpcv::canny(const Image& image) {
 
 	Image grey = greyscale(image);
 	grey = gaussian(grey);
-	Image newImagex = convoluteKernal(grey, x);
-	Image newImagey = convoluteKernal(grey, y);
-	Image magnitudes = lpcv::pythag(newImagex, newImagey);
+	Vec newImagex = convoluteKernal(grey, x);
+	Vec newImagey = convoluteKernal(grey, y);
+	Vec magnitudes = lpcv::pythag(newImagex, newImagey);
 	auto angles = findAngles(newImagex, newImagey);
 	auto newImage = edgeSuppression(magnitudes, angles);
 

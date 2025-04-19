@@ -7,9 +7,9 @@ namespace lpcv {
 
 
 	Image greyscale(const Image& image);
-	Image pythag(Image& i1, Image& i2);
-	lpcv::Vec findAngles(lpcv::Image& i1, lpcv::Image& i2);
-	lpcv::Image edgeSuppression(const lpcv::Image& magnitudes, const lpcv::Vec& angles);
+	lpcv::Vec pythag(lpcv::Vec& i1, lpcv::Vec& i2);
+	lpcv::Vec findAngles(lpcv::Vec& ImgX, lpcv::Vec& ImgY);
+		lpcv::Image edgeSuppression(const lpcv::Vec& magnitudes, const lpcv::Vec& angles);
 
 
 

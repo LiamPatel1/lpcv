@@ -45,7 +45,7 @@ namespace lpcv {
 			throw std::invalid_argument("colour space invalid");
 		}
 
-
+		
 
 		const uint32_t getNonAlphaChannelCount() const {
 			if (hasAlpha()) 
@@ -63,6 +63,7 @@ namespace lpcv {
 			std::memcpy(&val, &data[i*getByteDepth()], this->getByteDepth());
 			return val;
 		}
+
 
 
 		const std::vector<unsigned char> getSubPixel_ByteArray(const int i) const {

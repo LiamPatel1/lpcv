@@ -44,6 +44,7 @@ namespace lpcv {
 			return (getBitDepth() / 8);
 		}
 
+		
 	
 		const uint8_t getDimensions() const {
 			return measurements.size();
@@ -56,9 +57,39 @@ namespace lpcv {
 			return this->data;
 		}
 
-		/*void insertData(std::vector<unsigned char> newData) {
-			data.insert(data.end(), newData.begin(), newData.end());
-		}*/
+		const std::vector<uint32_t> getMeasurements() const {
+			return measurements;
+		}
+
+		template<typename... Indices>
+		float getValue_FLOAT(Indices... indices) {
+			if (type == TYPE_FLOAT) {
+				float newVal;
+				memcpy(newVal, at(indices...), 4);
+				return newVal;
+			}
+			else {
+				uint16_t newVal;
+				memcpy(newVal, at(indices...), 4);
+				return (float)newVal;
+			}
+
+		}
+		template<typename... Indices>
+		const float getValue_FLOAT(Indices... indices) const {
+			if (type == TYPE_FLOAT) {
+				float newVal;
+				memcpy(newVal, at(indices...), 4);
+				return newVal;
+			}
+			else {
+				uint16_t newVal;
+				memcpy(newVal, at(indices...), 4);
+				return (float)newVal;
+			}
+
+		}
+
 
 
 		template<typename... Indices>

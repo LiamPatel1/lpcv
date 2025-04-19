@@ -43,18 +43,17 @@ lpcv::Image lpcv::greyscale(const lpcv::Image& image) {
 }
 
 
-lpcv::Image lpcv::pythag(lpcv::Image& i1, lpcv::Image& i2) {
+lpcv::Vec lpcv::pythag(lpcv::Vec& i1, lpcv::Vec& i2) {
 
 	if (i1.getDataSize() != i2.getDataSize()) throw std::invalid_argument("images have different sizes");
-	if (i1.getHeight() != i2.getHeight()) throw std::invalid_argument("images have different sizes");
-	if (i1.getWidth() != i2.getWidth()) throw std::invalid_argument("images have different sizes");
 
-	lpcv::Image newImage(i1);
 
-	for (int y = 0; y < i1.getHeight(); y++) {
-		for (int x = 0; x < i1.getWidth(); x++)
-			for (int sub = 0; sub < i1.getChannelCount(); sub++) {
-				float newVal = std::pow(i1.getSubPixel_U64(y,x,sub), 2) + std::pow(i2.getSubPixel_U64(y,x,sub), 2);
+	lpcv::Vec newImage(i1);
+
+	for (int y = 0; y < i1.getMeasurements()[0]; y++) {
+		for (int x = 0; x < i1.getMeasurements()[1]; x++)
+			for (int sub = 0; sub < i1.getMeasurements()[2]; sub++) {
+				float newVal = std::pow(i1.getValue_FLOAT(y,x,sub), 2) + std::pow(i2.getValue_FLOAT(y,x,sub), 2);
 				newVal = std::sqrt(newVal);
 				newImage.setValue(newVal, y, x, sub);
 			}
@@ -63,17 +62,15 @@ lpcv::Image lpcv::pythag(lpcv::Image& i1, lpcv::Image& i2) {
 
 }
 
-lpcv::Vec lpcv::findAngles(lpcv::Image& ImgX, lpcv::Image& ImgY) {
+lpcv::Vec lpcv::findAngles(lpcv::Vec& ImgX, lpcv::Vec& ImgY) {
 	if (ImgX.getDataSize() != ImgY.getDataSize()) throw std::invalid_argument("images have different sizes");
-	if (ImgX.getHeight() != ImgY.getHeight()) throw std::invalid_argument("images have different sizes");
-	if (ImgX.getWidth() != ImgY.getWidth()) throw std::invalid_argument("images have different sizes");
 
-	lpcv::Vec angles(std::vector<unsigned char>(ImgX.getSubPixelCount()), TYPE_U8, { ImgX.getHeight(), ImgX.getWidth(), ImgX.getChannelCount() });
+	lpcv::Vec angles(std::vector<unsigned char>(ImgX.getDataSize()), TYPE_U8, ImgX.getMeasurements());
 
-	for (int y = 0; y < ImgX.getHeight(); y++) {
-		for (int x = 0; x < ImgX.getWidth(); x++) {
-			for (int sub = 0; sub < ImgX.getChannelCount(); sub++) {
-				float newVal = std::atan2((float)(ImgY.getSubPixel_U64(y, x, sub) - 127.5), (float)(ImgX.getSubPixel_U64(y, x, sub) - 127.5));
+	for (int y = 0; y < ImgX.getMeasurements()[0]; y++) {
+		for (int x = 0; x < ImgX.getMeasurements()[1]; x++) {
+			for (int sub = 0; sub < ImgX.getMeasurements()[2]; sub++) {
+				float newVal = std::atan2((float)(ImgY.getValue_FLOAT(y, x, sub) - 127.5), (float)(ImgX.getValue_FLOAT(y, x, sub) - 127.5));
 				newVal = lpcv::radToDeg(newVal);
 				if (newVal < 0) {
 					newVal += 360;
@@ -92,9 +89,9 @@ lpcv::Vec lpcv::findAngles(lpcv::Image& ImgX, lpcv::Image& ImgY) {
 	return angles;
 }
 
-lpcv::Image lpcv::edgeSuppression(const lpcv::Image& magnitudes, const lpcv::Vec& angles) {
+lpcv::Image lpcv::edgeSuppression(const lpcv::Vec& magnitudes, const lpcv::Vec& angles) {
 
-	lpcv::Image newImage(magnitudes);
+	
 	for (int y = 0; y < magnitudes.getHeight(); y++) {
 		for (int x = 0; x < magnitudes.getWidth(); x++) {
 			for (int sub = 0; sub < magnitudes.getChannelCount(); sub++) {
