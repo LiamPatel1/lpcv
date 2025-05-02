@@ -1,0 +1,17 @@
+{
+  "dependencies": [
+    {
+      "name": "glfw3"
+    },
+    {
+      "name": "libpng"
+    },
+    {
+      "name": "catch2"
+    },
+    {
+      "name": "glad"
+    }
+  ],
+  "builtin-baseline": "acd5bba5aac8b6573b5f6f463dc0341ac0ee6fa4"
+}
